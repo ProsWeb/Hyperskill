@@ -1,2 +1,2 @@
 # Hyperskill
-My solutions for hardest hyperskill problems
+My solutions to hardest hyperskill problems
