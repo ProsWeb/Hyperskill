@@ -19,83 +19,139 @@
 //        robot.stepForward();
 //        robot.stepForward();
 
-public class Robot {
-
-    private Direction getDirection() {
-        // current direction
-    }
-
-    private int getX() {
-        // current X coordinate
-    }
-
-    private int getY() {
-        // current Y o
-    }
-
-    private void turnLeft() {
-        // rotate the robot 90 degrees counterclockwise
-    }
-
-    private void turnRight() {
-        // rotate the robot 90 degrees clockwise
-    }
-
-    private void stepForward() {
-        // take one step in the current direction
-        // x or y coordinate will be changed by 1
-    }
-
-    public enum Direction {
-        UP,
-        DOWN,
-        LEFT,
-        RIGHT
-    }
-
+class Move {
     public static void moveRobot(Robot robot, int toX, int toY) {
-
         while (robot.getX() != toX || robot.getY() != toY) {
 
-            String direction = robot.getDirection().toString();
-
             if (robot.getX() < toX) {
-                while (!direction.equals("RIGHT")) {
-                    robot.turnRight();
-                }
-                while (robot.getX() != toX) {
-                    robot.stepForward();
-                }
+                rotate(robot, "RIGHT");
+                moveToX(robot, toX);
             }
 
             if (robot.getY() < toY) {
-                while (!direction.equals("UP")) {
-                    robot.turnLeft();
-                }
-                while (robot.getY() != toY) {
-                    robot.stepForward();
-                }
+                rotate(robot, "UP");
+                moveToY(robot, toY);
             }
 
             if (robot.getX() > toX) {
-                while (!direction.equals("LEFT")) {
-                    robot.turnLeft();
-                }
-                while (robot.getX() != toX) {
-                    robot.stepForward();
-                }
+                rotate(robot, "LEFT");
+                moveToX(robot, toX);
             }
 
             if (robot.getY() > toY) {
-                while (!direction.equals("DOWN")) {
-                    robot.turnLeft();
-                }
-                while (robot.getY() != toY) {
-                    robot.stepForward();
-                }
+                rotate(robot, "DOWN");
+                moveToY(robot, toY);
             }
+        }
+    }
+    
+    private static void rotate(Robot robot, String destination) {
+        while (!robot.getDirection().toString().equals(destination)) {
+            robot.turnLeft();
+        }
+    }
+    
+    private static void moveToX(Robot robot, int toX) {
+        while (robot.getX() != toX) {
+            robot.stepForward();
+        }
+    }
+    
+    private static void moveToY(Robot robot, int toY) {
+        while (robot.getY() != toY) {
+            robot.stepForward();
         }
     }
 }
 
+//Don't change code below
 
+enum Direction {
+    UP(0, 1),
+    DOWN(0, -1),
+    LEFT(-1, 0),
+    RIGHT(1, 0);
+
+    private final int dx;
+    private final int dy;
+
+    Direction(int dx, int dy) {
+        this.dx = dx;
+        this.dy = dy;
+    }
+
+    public Direction turnLeft() {
+        switch (this) {
+            case UP:
+                return LEFT;
+            case DOWN:
+                return RIGHT;
+            case LEFT:
+                return DOWN;
+            case RIGHT:
+                return UP;
+            default:
+                throw new IllegalStateException();
+        }
+    }
+
+    public Direction turnRight() {
+        switch (this) {
+            case UP:
+                return RIGHT;
+            case DOWN:
+                return LEFT;
+            case LEFT:
+                return UP;
+            case RIGHT:
+                return DOWN;
+            default:
+                throw new IllegalStateException();
+        }
+    }
+
+    public int dx() {
+        return dx;
+    }
+
+    public int dy() {
+        return dy;
+    }
+}
+
+class Robot {
+    private int x;
+    private int y;
+    private Direction direction;
+
+    public Robot(int x, int y, Direction direction) {
+        this.x = x;
+        this.y = y;
+        this.direction = direction;
+    }
+
+    public void turnLeft() {
+        direction = direction.turnLeft();
+    }
+
+    public void turnRight() {
+        direction = direction.turnRight();
+    }
+
+    public void stepForward() {
+        x += direction.dx();
+        y += direction.dy();
+    }
+
+    public Direction getDirection() {
+        return direction;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+}
